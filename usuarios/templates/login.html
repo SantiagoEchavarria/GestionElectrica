@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 80px); margin-top: 20px;">
+    <div class="card shadow-lg w-100" style="max-width: 400px;">
+        <div class="card-body">
+            <h2 class="text-center">Iniciar sesión</h2>
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo electrónico</label>
+                    <input type="email" name="email" id="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" name="password" id="password" class="form-control" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-dark btn-lg">Ingresar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

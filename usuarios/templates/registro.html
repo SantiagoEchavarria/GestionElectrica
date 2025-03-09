@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 80px); margin-top: 20px;">
+    <div class="card shadow-lg w-100" style="max-width: 480px;">
+        <div class="card-body">
+            <div class="text-center">
+                <h1 class="card-title h3">Crear usuario</h1>
+                {{ error }}
+            </div>
+            {% if form_errors %}
+                <div class="alert alert-danger mt-3">
+                    <ul class="mb-0">
+                        {% for field, errors in form_errors.items %}
+                            <li><strong>{{ field }}:</strong> {{ errors.0 }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <div class="mt-4">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_nombre" class="form-label text-muted">Nombre</label>
+                        <input type="text" name="nombre" id="id_nombre" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_email" class="form-label text-muted">Correo electrónico</label>
+                        <input type="email" name="email" id="id_email" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_telefono" class="form-label text-muted">Teléfono</label>
+                        <input type="text" name="telefono" id="id_telefono" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_fecha_nacimiento" class="form-label text-muted">Fecha de nacimiento</label>
+                        <input type="date" name="fecha_nacimiento" id="id_fecha_nacimiento" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_password1" class="form-label text-muted">Contraseña</label>
+                        <input type="password" name="password1" id="id_password1" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_password2" class="form-label text-muted">Confirmar contraseña</label>
+                        <input type="password" name="password2" id="id_password2" class="form-control" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-dark btn-lg">Crear usuario</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
