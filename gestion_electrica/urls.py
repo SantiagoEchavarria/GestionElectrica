@@ -4,6 +4,7 @@ from django.urls import path
 from usuarios import views
 from django.contrib.auth import views as auth_views
 from dispositivos import views as views_dispositivos
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     #urls de usuarios
@@ -20,4 +21,7 @@ urlpatterns = [
     #urls dispositivos
     path("hogares/", views_dispositivos.lista_hogares, name="lista_hogares"),
     path("hogares/registrar", views_dispositivos.registrar_hogar, name="registrar_hogar"),
+    path("dispositivos/", views_dispositivos.lista_dispositivos, name="lista_dispositivos"),
+    path("dispositivos/registrar", views_dispositivos.registrar_dispositivos, name="registrar_dispositivo"),
+
 ]
