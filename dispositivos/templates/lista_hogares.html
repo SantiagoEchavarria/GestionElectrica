@@ -1,0 +1,11 @@
+{% extends 'base.html'%}
+{% block content %}
+<h2>Lista de Hogares</h2>
+<ul>
+    {% for hogar in hogares %}
+        <li>{{ hogar.nombre }} - {{ hogar.direccion }}</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'registrar_hogar' %}">Registrar nuevo hogar</a>
+
+{% endblock%}

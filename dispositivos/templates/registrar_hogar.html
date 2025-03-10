@@ -1,0 +1,11 @@
+{% extends 'base.html'%}
+{% block content %}
+<h2>Registrar Hogar</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+    <a href="{% url 'lista_hogares' %}">Ver lista de hogares</a>
+
+{% endblock%}
