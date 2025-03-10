@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 80px); margin-top: 20px;">
+    <div class="card shadow-lg w-100" style="max-width: 480px;">
+        <div class="card-body">
+            <div class="text-center">
+                <h1 class="card-title h3">Iniciar sesión</h1>
+                {{error}}
+            </div>
+            <div class="mt-4">
+                <form action="/iniciar_seccion/" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="username" class="form-label text-muted">Nombre de usuario</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Nombre de usuario" required autofocus>
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="form-label text-muted">Contraseña</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required autocomplete="current-password">
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-dark btn-lg">Iniciar sesión</button>
+                    </div>
+                    <p class="text-center text-muted mt-4">
+                        <a href="{% url 'password_reset' %}" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
