@@ -14,7 +14,7 @@ class ParteHogarForm(forms.ModelForm):
 class DispositivoForm(forms.ModelForm):
     class Meta:
         model=Dispositivo
-        fields = ["nombre", "tipo", "consumo_watts","hogar", "estado"]
+        fields = ["nombre", "tipo", "consumo_watts","partehogar", "estado"]
 
 
 class TipoDispotivoForm(forms.ModelForm):

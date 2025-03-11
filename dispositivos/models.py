@@ -30,10 +30,10 @@ class Dispositivo(models.Model):
         ('apagado', 'Apagado')
     ]
     
-    nombre = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100)  # Este campo se reemplazará por partehogar
     tipo = models.ForeignKey(TipoDispositivo, on_delete=models.RESTRICT)
     consumo_watts = models.DecimalField(max_digits=10, decimal_places=2)
-    hogar = models.ForeignKey(Hogar, on_delete=models.CASCADE)
+    partehogar = models.ForeignKey(ParteHogar, on_delete=models.CASCADE)
     estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default='apagado')
 
     def __str__(self):
