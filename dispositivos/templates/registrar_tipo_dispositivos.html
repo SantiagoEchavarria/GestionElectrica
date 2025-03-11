@@ -1,0 +1,10 @@
+{% extends 'base.html'%}
+{% block content%}
+    <h2>Registrar Tipo de Dispositivo</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+    <a href="{% url 'lista_tipos_dispositivos' %}">Ver lista de tipos de dispositivos</a>
+{% endblock%}

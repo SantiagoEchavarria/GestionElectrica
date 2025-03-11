@@ -23,5 +23,7 @@ urlpatterns = [
     path("hogares/registrar", views_dispositivos.registrar_hogar, name="registrar_hogar"),
     path("dispositivos/", views_dispositivos.lista_dispositivos, name="lista_dispositivos"),
     path("dispositivos/registrar", views_dispositivos.registrar_dispositivos, name="registrar_dispositivo"),
+    path("tipos-dispositivos/", views_dispositivos.lista_tipos_dispositivos, name="lista_tipos_dispositivos"),
+    path("tipos-dispositivos/registrar", views_dispositivos.registrar_tipo_dispositivos, name="registrar_tipo_dispositivos")
 
 ]

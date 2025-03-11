@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
-from .models import Hogar, Dispositivo
-from .forms import HogarForm, DispositivoForm
+from .models import Hogar, Dispositivo, TipoDispositivo
+from .forms import HogarForm, DispositivoForm, TipoDispotivoForm
 
 def registrar_hogar(request):
     if request.method=="POST":
@@ -21,6 +21,16 @@ def registrar_dispositivos(request):
     else:
         form=DispositivoForm()
         return render(request, "registrar_dispositivo.html", {"form": form})
+    
+def registrar_tipo_dispositivos(request):
+    if request.method == "POST":
+        form = TipoDispotivoForm(request.POST)
+        if form.is_valid:
+            form.save()
+            return redirect("lista_tipos_dispositivos")
+    else:
+        form=TipoDispotivoForm()
+        return render(request, "registrar_tipo_dispositivos.html", {"form":form})
 
 def lista_hogares(request):
     hogares = Hogar.objects.all()
@@ -29,3 +39,7 @@ def lista_hogares(request):
 def lista_dispositivos(request):
     dispositivos = Dispositivo.objects.all()
     return render(request, "lista_dispositivos.html", {"dispositvos": dispositivos})
+
+def lista_tipos_dispositivos(request):
+    tipoDispositivo = TipoDispositivo.objects.all()
+    return render(request, "lista_tipos_dispositivos.html", {"tiposDispositivo":tipoDispositivo})
