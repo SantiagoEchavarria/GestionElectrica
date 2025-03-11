@@ -1,10 +1,15 @@
 from django import forms 
-from .models import Hogar, Dispositivo, TipoDispositivo
+from .models import Hogar, Dispositivo, TipoDispositivo, ParteHogar
 
 class HogarForm(forms.ModelForm):
     class Meta:
         model=Hogar
         fields = ["nombre", "direccion"]
+        
+class ParteHogarForm(forms.ModelForm):
+    class Meta:
+        model=ParteHogar
+        fields = ["nombre", "hogar"]
         
 class DispositivoForm(forms.ModelForm):
     class Meta:

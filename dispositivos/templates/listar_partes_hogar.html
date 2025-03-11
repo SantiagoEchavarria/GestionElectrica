@@ -1,0 +1,10 @@
+{% extends 'base.html'%}
+{% block content%}
+    <h2>Lista de Partes del Hogar</h2>
+    <ul>
+        {% for parte in partes %}
+            <li>{{ parte.nombre }} - {{ parte.hogar.nombre }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'registrar_partes_hogar' %}">Registrar nueva parte</a>
+    {% endblock%}

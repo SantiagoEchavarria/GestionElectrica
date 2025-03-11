@@ -15,6 +15,14 @@ class Hogar(models.Model):
 
     def __str__(self):
         return self.nombre
+    
+class ParteHogar(models.Model):
+    nombre = models.CharField(max_length=100)
+    hogar = models.ForeignKey(Hogar, on_delete=models.CASCADE, related_name="partes", default=1)
+
+    def __str__(self):
+        return f"{self.nombre} - {self.hogar.nombre}"
+    
 
 class Dispositivo(models.Model):
     ESTADO_CHOICES = [
