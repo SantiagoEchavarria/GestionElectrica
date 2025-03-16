@@ -9,16 +9,16 @@ class Consumo(models.Model):
 
     def calcular_consumo(self, dispositivo):
         consumo_diario = {
-            'horno_electrico': {'Numero_de_eventos': (1, 3), 'Tiempo_promedio_evento': (15, 45)},  
-            'lampara_led': {'Numero_de_eventos': (1, 5), 'Tiempo_promedio_evento': (60, 300)},  
-            'cargador_celular': {'Numero_de_eventos': (1, 3), 'Tiempo_promedio_evento': (60, 180)},  
-            'ventilador': {'Numero_de_eventos': (1, 2), 'Tiempo_promedio_evento': (120, 360)},  
-            'aire_acondicionado': {'Numero_de_eventos': (1, 2), 'Tiempo_promedio_evento': (240, 480)},  
-            'microondas': {'Numero_de_eventos': (1, 3), 'Tiempo_promedio_evento': (10, 30)},  
-            'computadora_portatil': {'Numero_de_eventos': (1, 2), 'Tiempo_promedio_evento': (180, 300)},  
-            'televisor_led': {'Numero_de_eventos': (1, 3), 'Tiempo_promedio_evento': (120, 300)},  
-            'lavadora': {'Numero_de_eventos': (1, 2), 'Tiempo_promedio_evento': (30, 60)},  
-            'nevera': {'Numero_de_eventos': (20, 24), 'Tiempo_promedio_evento': (30, 60)}  
+            'horno_electrico': {'lambda_eventos': 1.5, 'media_tiempo': 30},  
+            'lampara_led': {'lambda_eventos': 2.5, 'media_tiempo': 300},  
+            'cargador_celular': {'lambda_eventos': 1.2, 'media_tiempo': 180},  
+            'ventilador': {'lambda_eventos': 1.8, 'media_tiempo': 360},  
+            'aire_acondicionado': {'lambda_eventos': 1.1, 'media_tiempo': 480},  
+            'microondas': {'lambda_eventos': 2.3, 'media_tiempo': 18},  
+            'computadora_portatil': {'lambda_eventos': 1.4, 'media_tiempo': 300},  
+            'televisor_led': {'lambda_eventos': 1.6, 'media_tiempo': 240},  
+            'lavadora': {'lambda_eventos': 1.2, 'media_tiempo': 60},  
+            'nevera': {'lambda_eventos': 24, 'media_tiempo': 60}  
         }
 
         dias = (self.fecha_fin - self.fecha_inicio).days + 1
@@ -31,14 +31,17 @@ class Consumo(models.Model):
             return np.array([])  
 
         if dispositivo_obj.nombre in consumo_diario:
-            num_eventos_min, num_eventos_max = consumo_diario[dispositivo_obj.nombre]['Numero_de_eventos']
-            tiempo_min, tiempo_max = consumo_diario[dispositivo_obj.nombre]['Tiempo_promedio_evento']
+            lambda_eventos = consumo_diario[dispositivo_obj.nombre]['lambda_eventos']
+            media_tiempo = consumo_diario[dispositivo_obj.nombre]['media_tiempo']
 
             matriz_consumo = []
             for _ in range(dias):
-                num_eventos = random.randint(num_eventos_min, num_eventos_max)
+                num_eventos = np.random.poisson(lambda_eventos)  
+
                 for _ in range(num_eventos):
-                    tiempo_evento = random.randint(tiempo_min, tiempo_max)
+                    tiempo_evento = int(np.random.exponential(scale=media_tiempo))  
+                    tiempo_evento = max(1, tiempo_evento) 
+                    
                     hora_evento = random.randint(0, 23)  
                     
                     consumo_electrico = (tiempo_evento / 60) * dispositivo_obj.potencia  
