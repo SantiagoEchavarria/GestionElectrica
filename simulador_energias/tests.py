@@ -52,15 +52,15 @@ class ConsumoTestCase(TestCase):
 
         # La matriz debe tener 3 columnas (consumo, hora del evento, duración)
         if matriz_consumo.size > 0:  # Solo si hay eventos registrados
-            self.assertEqual(matriz_consumo.shape[1], 3, "La matriz debe tener 3 columnas")
+            self.assertEqual(matriz_consumo.shape[1], 4, "La matriz debe tener 3 columnas")
 
         # Verificar que los valores de hora estén en el rango correcto (0-23)
         for fila in matriz_consumo:
-            self.assertTrue(0 <= fila[1] <= 23, "La hora del evento debe estar entre 0 y 23")
+            self.assertTrue(0 <= fila[2] <= 23, "La hora del evento debe estar entre 0 y 23")
         
         # Verificar que la duración sea mayor a 0
         for fila in matriz_consumo:
-            self.assertTrue(fila[2] > 0, "El tiempo de duración debe ser mayor a 0")
+            self.assertTrue(fila[3] > 0, "El tiempo de duración debe ser mayor a 0")
 
 
 
