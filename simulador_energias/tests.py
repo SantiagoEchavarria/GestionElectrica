@@ -7,7 +7,6 @@ from dispositivos.models import Dispositivo, TipoDispositivo, Hogar, ParteHogar
 class ConsumoTestCase(TestCase):
     def setUp(self):
         """ Configuración inicial de los objetos para el test """
-
         # Crear un hogar
         self.hogar = Hogar.objects.create(nombre="Casa de Prueba", direccion="Calle 123")
 
@@ -16,7 +15,7 @@ class ConsumoTestCase(TestCase):
 
         # Crear un tipo de dispositivo
         self.tipo_dispositivo = TipoDispositivo.objects.create(
-            nombre="Microondas",
+            nombre="microondas",
             rango_consumo_min=700,
             rango_consumo_max=1200,
             descripcion="Microondas de cocina"
@@ -24,7 +23,7 @@ class ConsumoTestCase(TestCase):
 
         # Crear un dispositivo
         self.dispositivo = Dispositivo.objects.create(
-            nombre="Microondas LG",
+            nombre="Microondas",
             tipo=self.tipo_dispositivo,
             consumo_watts=1000,  # 1 kW
             partehogar=self.parte_hogar,
@@ -39,6 +38,12 @@ class ConsumoTestCase(TestCase):
 
     def test_calculo_consumo(self):
         """ Verifica que el método calcular_consumo retorna una matriz válida """
+        matriz_consumo = self.consumo.calcular_consumo(self.dispositivo.nombre)
+
+        # Imprimir la matriz de consumo para depuración
+        print("\nMatriz de Consumo:")
+        print(matriz_consumo)
+
         
         matriz_consumo = self.consumo.calcular_consumo(self.dispositivo.nombre)
 
