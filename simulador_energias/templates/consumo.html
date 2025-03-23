@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Calcular Consumo de Dispositivos</h2>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="POST" class="p-4 border rounded bg-light shadow">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="fecha_inicio" class="form-label">Fecha Inicio:</label>
+                    <input type="date" name="fecha_inicio" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="fecha_fin" class="form-label">Fecha Fin:</label>
+                    <input type="date" name="fecha_fin" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="dispositivo" class="form-label">Dispositivo:</label>
+                    <select name="dispositivo" class="form-select" required>
+                        {% for dispositivo in dispositivos %}
+                            <option value="{{ dispositivo.id }}">{{ dispositivo.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Calcular</button>
+            </form>
+        </div>
+    </div>
+
+    {% if matriz_consumo %}
+    <div class="mt-5">
+        <h3 class="text-center">Resultados:</h3>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Dispositivo</th>
+                        <th>Fecha</th>
+                        <th>Consumo (kWh)</th>
+                        <th>Hora</th>
+                        <th>Duración (min)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fila in matriz_consumo %}
+                    <tr>
+                        <td>{{ fila.0 }}</td>
+                        <td>{{ fila.1 }}</td>
+                        <td>{{ fila.2 }}</td>
+                        <td>{{ fila.3 }}</td>
+                        <td>{{ fila.4 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -4,6 +4,7 @@ from django.urls import path
 from usuarios import views
 from django.contrib.auth import views as auth_views
 from dispositivos import views as views_dispositivos
+from simulador_energias import views as views_simulador
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +28,8 @@ urlpatterns = [
     path("tipos-dispositivos/registrar", views_dispositivos.registrar_tipo_dispositivos, name="registrar_tipo_dispositivos"),
     path("partes-hogar/", views_dispositivos.listar_partes_hogar, name="listar_partes_hogar"),
     path("partes-hogar/registrar/", views_dispositivos.registrar_partes_hogar, name="registrar_partes_hogar"),
+    
+    #urls simulador
+    path("calcular_consumo/", views_simulador.calcular_consumo, name="calcular_consumo"),
+    
 ]

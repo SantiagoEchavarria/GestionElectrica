@@ -15,7 +15,7 @@ class ConsumoTestCase(TestCase):
 
         # Crear un tipo de dispositivo
         self.tipo_dispositivo = TipoDispositivo.objects.create(
-            nombre="microondas",
+            nombre="horno_electrico",
             rango_consumo_min=700,
             rango_consumo_max=1200,
             descripcion="Microondas de cocina"
@@ -25,7 +25,7 @@ class ConsumoTestCase(TestCase):
         self.dispositivo = Dispositivo.objects.create(
             nombre="Microondas",
             tipo=self.tipo_dispositivo,
-            consumo_watts=1000,  # 1 kW
+            consumo_watts=2000,  # 1 kW
             partehogar=self.parte_hogar,
             estado="encendido"
         )
@@ -41,7 +41,7 @@ class ConsumoTestCase(TestCase):
         matriz_consumo = self.consumo.calcular_consumo(self.dispositivo.nombre)
 
         # Imprimir la matriz de consumo para depuración
-        print("\nMatriz de Consumo:")
+        print("\nMatriz de Consumo:" + self.dispositivo.tipo.nombre)
         print(matriz_consumo)
 
         
@@ -52,15 +52,15 @@ class ConsumoTestCase(TestCase):
 
         # La matriz debe tener 3 columnas (consumo, hora del evento, duración)
         if matriz_consumo.size > 0:  # Solo si hay eventos registrados
-            self.assertEqual(matriz_consumo.shape[1], 4, "La matriz debe tener 3 columnas")
+            self.assertEqual(matriz_consumo.shape[1], 5, "La matriz debe tener 5 columnas")
 
         # Verificar que los valores de hora estén en el rango correcto (0-23)
         for fila in matriz_consumo:
-            self.assertTrue(0 <= fila[2] <= 23, "La hora del evento debe estar entre 0 y 23")
+            self.assertTrue(0 <= fila[3] <= 23, "La hora del evento debe estar entre 0 y 23")
         
         # Verificar que la duración sea mayor a 0
         for fila in matriz_consumo:
-            self.assertTrue(fila[3] > 0, "El tiempo de duración debe ser mayor a 0")
+            self.assertTrue(fila[4] > 0, "El tiempo de duración debe ser mayor a 0")
 
 
 
