@@ -15,7 +15,7 @@ class ConsumoTestCase(TestCase):
 
         # Crear un tipo de dispositivo
         self.tipo_dispositivo = TipoDispositivo.objects.create(
-            nombre="horno_electrico",
+            nombre="Horno electrico",
             rango_consumo_min=700,
             rango_consumo_max=1200,
             descripcion="Microondas de cocina"
@@ -23,9 +23,9 @@ class ConsumoTestCase(TestCase):
 
         # Crear un dispositivo
         self.dispositivo = Dispositivo.objects.create(
-            nombre="Microondas",
+            nombre="Horno electrico",
             tipo=self.tipo_dispositivo,
-            consumo_watts=2000,  # 1 kW
+            consumo_watts=1000,  # 1 kW
             partehogar=self.parte_hogar,
             estado="encendido"
         )
