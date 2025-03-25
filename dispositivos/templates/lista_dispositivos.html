@@ -3,7 +3,7 @@
 <h2>Lista de Dispositivos</h2>
 <ul>
     {% for dispositivo in dispositivos %}
-        <li>{{ dispositivo.nombre }} - {{ dispositivo.tipo.nombre }} - {{ dispositivo.consumo_watts }}W - {{ dispositivo.hogar.nombre }} - {{ dispositivo.get_estado_display }}</li>
+        <li>{{ dispositivo.nombre }} - {{ dispositivo.tipo.nombre }} - {{ dispositivo.consumo_watts }}W </li>
     {% endfor %}
 </ul>
 <a href="{% url 'registrar_dispositivo' %}">Registrar nuevo dispositivo</a>

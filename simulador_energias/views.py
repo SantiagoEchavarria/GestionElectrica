@@ -1,10 +1,11 @@
 from django.shortcuts import render
-
+from django.contrib.auth.decorators import login_required
 from simulador_energias.models import Consumo, RegistroConsumo
 from .forms import ConsumoForm
 from dispositivos.models import Dispositivo
 from datetime import datetime
 
+@login_required
 def calcular_consumo(request):
     dispositivos = Dispositivo.objects.all()
     matriz_consumo = []
