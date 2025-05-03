@@ -1,4 +1,40 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
+
 {% block content %}
-<h1>Home</h1>
+<div class="text-center my-5">
+    <h1 class="display-4 fw-bold">Sistema de Ahorro de Energía para Hogares Inteligentes</h1>
+    <p class="lead">Optimiza el consumo eléctrico de tu hogar con nuestro sistema inteligente de monitoreo y simulación de energía.</p>
+</div>
+
+<div class="row text-center mb-5">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100 border-0">
+            <div class="card-body">
+                <h5 class="card-title fw-bold">Monitoreo de Dispositivos</h5>
+                <p class="card-text">Visualiza y administra el consumo de energía de tus dispositivos conectados en tiempo real.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100 border-0">
+            <div class="card-body">
+                <h5 class="card-title fw-bold">Simulación de Consumo</h5>
+                <p class="card-text">Realiza simulaciones para identificar oportunidades de ahorro y mejorar la eficiencia energética de tu hogar.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100 border-0">
+            <div class="card-body">
+                <h5 class="card-title fw-bold">Gestión Inteligente</h5>
+                <p class="card-text">Organiza hogares, partes del hogar y dispositivos fácilmente desde un solo lugar.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-4">
+    <a href="/dispositivos" class="btn btn-primary btn-lg me-2">Ver Dispositivos</a>
+    <a href="/calcular_consumo" class="btn btn-success btn-lg">Simular Consumo</a>
+</div>
 {% endblock %}

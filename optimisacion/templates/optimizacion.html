@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Optimización Energética{% endblock %}
+
+{% block content %}
+<h2 class="fw-bold">Optimización Energética</h2>
+<hr>
+
+<div class="mb-4">
+    <h4>⚡ Consumo Actual</h4>
+    <p><strong>Dispositivos Encendidos:</strong> <span id="cantidad"></span></p>
+    <p><strong>Consumo Total:</strong> <span id="consumo"></span> watts</p>
+    <ul id="detalle-dispositivos" class="list-group"></ul>
+</div>
+
+<script>
+function actualizarConsumo() {
+    fetch("{% url 'consumo_actual' %}")
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("cantidad").innerText = data.cantidad_dispositivos;
+            document.getElementById("consumo").innerText = data.consumo_total;
+            const detalle = document.getElementById("detalle-dispositivos");
+            detalle.innerHTML = '';
+            data.detalles.forEach(dispositivo => {
+                const li = document.createElement("li");
+                li.className = "list-group-item";
+                li.innerText = `${dispositivo.nombre} (${dispositivo.consumo}W) - ${dispositivo.ubicacion}`;
+                detalle.appendChild(li);
+            });
+        });
+}
+
+setInterval(actualizarConsumo, 5000);
+actualizarConsumo();
+</script>
+{% endblock %}

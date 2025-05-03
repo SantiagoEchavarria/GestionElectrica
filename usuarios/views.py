@@ -7,11 +7,10 @@ from django.contrib.auth.forms import AuthenticationForm
 from .models import Usuario  
 from .forms import UsuarioCreationForm  
 from .forms import UsuarioUpdateForm
-@login_required
-# Vista de inicio
+
 def inicio(request):
     return render(request, 'inicio.html')
-@login_required
+
 # Vista para registrar usuario
 def crearSeccion(request):
     if request.method == 'GET': 
@@ -32,7 +31,7 @@ def crearSeccion(request):
                 'error': 'Error en el formulario',
                 'form_errors': form.errors
             })
-@login_required
+
 # Vista para iniciar sesión
 def iniciarSeccion(request):
     if request.method == 'GET': 

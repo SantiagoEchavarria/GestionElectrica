@@ -1,12 +1,15 @@
+{% extends 'base.html' %}
 
-{% extends 'base.html'%}
-{% block content%}
-    <h2>Lista de Tipos de Dispositivos</h2>
-    <ul>
-        {% for tipo in tipos %}
-            <li>{{ tipo.nombre }} - Consumo: {{ tipo.rango_consumo_min }}W - {{ tipo.rango_consumo_max }}W - {{ tipo.descripcion }}</li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'registrar_tipo_dispositivos' %}">Registrar nuevo tipo de dispositivo</a>
-{% endblock%}
+{% block title %}Lista de Dispositivos{% endblock %}
 
+{% block content %}
+<h2>Lista de Dispositivos</h2>
+<ul class="list-group">
+  {% for dispositivo in dispositivos %}
+    <li class="list-group-item">
+      {{ dispositivo.nombre }} - {{ dispositivo.tipo.nombre }} - {{ dispositivo.potencia }}W
+    </li>
+  {% endfor %}
+</ul>
+<a href="{% url 'registrar_dispositivo' %}" class="btn btn-primary mt-3">Registrar nuevo dispositivo</a>
+{% endblock %}

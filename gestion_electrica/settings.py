@@ -57,7 +57,7 @@ ROOT_URLCONF = 'gestion_electrica.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],  # <- importante
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,6 +69,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'gestion_electrica.wsgi.application'
 
@@ -127,6 +128,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
 LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/iniciar_seccion/'
 LOGOUT_REDIRECT_URL = '/login/'
 
 # Configuración de correo para recuperación de contraseña

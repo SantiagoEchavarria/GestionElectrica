@@ -1,11 +1,15 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
+
+{% block title %}Registrar Hogar{% endblock %}
+
 {% block content %}
-<h2>Registrar Hogar</h2>
+<div class="card shadow-sm p-4">
+    <h2 class="mb-4">Registrar Hogar</h2>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Guardar</button>
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <a href="{% url 'lista_hogares' %}" class="btn btn-secondary ms-2">Cancelar</a>
     </form>
-    <a href="{% url 'lista_hogares' %}">Ver lista de hogares</a>
-
-{% endblock%}
+</div>
+{% endblock %}

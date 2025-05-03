@@ -2,6 +2,10 @@ from django.shortcuts import redirect, render
 from .models import Hogar, Dispositivo, TipoDispositivo, ParteHogar
 from .forms import HogarForm, DispositivoForm, TipoDispotivoForm, ParteHogarForm
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, get_object_or_404
+from .models import Dispositivo
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 @login_required                        
 def registrar_hogar(request):
@@ -66,3 +70,10 @@ def lista_tipos_dispositivos(request):
 def listar_partes_hogar(request):
     partesHogar = ParteHogar.objects.all()
     return render (request, "listar_partes_hogar.html", {"partes": partesHogar}) 
+
+@login_required
+def cambiar_estado_dispositivo(request, dispositivo_id):
+    dispositivo = get_object_or_404(Dispositivo, id=dispositivo_id)
+    dispositivo.estado = 'apagado' if dispositivo.estado == 'encendido' else 'encendido'
+    dispositivo.save()
+    return HttpResponseRedirect(reverse('lista_dispositivos'))
