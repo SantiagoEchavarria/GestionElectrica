@@ -6,9 +6,6 @@
    ```bash
    # Windows
    python -m venv venv
-
-   # Linux/macOS
-   python3 -m venv venv
    ```
 2. **Activar el entorno virtual**
    ```bash
