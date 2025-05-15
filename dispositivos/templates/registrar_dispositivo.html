@@ -1,10 +1,18 @@
 {% extends 'base.html' %}
 
-{% block title %}Registrar Dispositivo{% endblock %}
+{% block title %}
+  {% if edicion %}Editar Dispositivo{% else %}Registrar Dispositivo{% endif %}
+{% endblock %}
 
 {% block content %}
 <div class="card shadow-sm p-4">
-    <h2 class="mb-4">Registrar Dispositivo</h2>
+    <h2 class="mb-4">
+        {% if edicion %}
+            Editar Dispositivo: {{ dispositivo.nombre }}
+        {% else %}
+            Registrar Dispositivo
+        {% endif %}
+    </h2>
     
     <form method="post">
         {% csrf_token %}
@@ -20,7 +28,9 @@
             {% endfor %}
         </div>
         
-        <button type="submit" class="btn btn-primary">💾 Guardar</button>
+        <button type="submit" class="btn btn-primary">
+            {% if edicion %}💾 Actualizar{% else %}💾 Guardar{% endif %}
+        </button>
         <a href="{% url 'lista_dispositivos' %}" class="btn btn-secondary ms-2">Cancelar</a>
     </form>
 </div>

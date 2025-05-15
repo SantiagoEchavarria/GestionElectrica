@@ -25,12 +25,12 @@ urlpatterns = [
     path("hogares/registrar", views_dispositivos.registrar_hogar, name="registrar_hogar"),
     path("dispositivos/", views_dispositivos.lista_dispositivos, name="lista_dispositivos"),
     path("dispositivos/registrar", views_dispositivos.registrar_dispositivos, name="registrar_dispositivo"),
+    path("dispositivos/editar/<int:dispositivo_id>/", views_dispositivos.editar_dispositivo, name="editar_dispositivo"),
+    path('dispositivos/eliminar/<int:dispositivo_id>/', views_dispositivos.eliminar_dispositivo, name='eliminar_dispositivo'),
     path("tipos-dispositivos/", views_dispositivos.lista_tipos_dispositivos, name="lista_tipos_dispositivos"),
     path("tipos-dispositivos/registrar", views_dispositivos.registrar_tipo_dispositivos, name="registrar_tipo_dispositivos"),
     path("partes-hogar/", views_dispositivos.listar_partes_hogar, name="listar_partes_hogar"),
     path("partes-hogar/registrar/", views_dispositivos.registrar_partes_hogar, name="registrar_partes_hogar"),
-    
-    #urls para cambiar el estado de los dispositivos
     path("dispositivos/<int:dispositivo_id>/cambiar_estado/", views_dispositivos.cambiar_estado_dispositivo, name="cambiar_estado_dispositivo"),
 
     #intento optimizaccion sjsjsjssj
