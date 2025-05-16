@@ -1,6 +1,6 @@
-# Ejecutar el proyecto
+# Informacion del parcial 2
 
-## Pasos básicos después de clonar el repositorio
+## Ejecutar el proyecto
 
 1. **Crear el entorno virtual**
    ```bash
@@ -19,16 +19,16 @@
    ```bash
    pip install -r requirements.txt
    ```
-4. **Si no existe `requirements.txt`, puedes generarlo con**
-    ```bash
-    pip freeze > requirements.txt
-    ```
-5. **Verificar instalación**
-   ```bash
-   python -m django --version
-   ```
-   
 ## Ejecutar el proyecto  
 ```bash
 python manage.py runserver
 ```
+
+## Pasos para ejecutar el test del punto 4 
+
+1. **Ejecutar en la terminal**
+   ```bash
+  locust -f C:\Users\admin\Desktop\GestionElectrica\simulador_energias\tests\locustfile.py --host=http://localhost:8000
+   ```
+2. **Ingresa a http://localhost:8089 en el navegador**
+# Los resultados del test tambien estan agregados en GESTIONELECTRICA/TestsPunto4/
