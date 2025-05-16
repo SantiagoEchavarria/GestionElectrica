@@ -35,6 +35,7 @@ urlpatterns = [
 
     #intento optimizaccion sjsjsjssj
     path("optimizacion/", include("optimisacion.urls")),
+    path('api/consumo/<int:id>/verificar', views_simulador.verificar_umbral, name='verificar_umbral'),
 
     #urls simulador
     path("calcular_consumo/", views_simulador.calcular_consumo, name="calcular_consumo"),

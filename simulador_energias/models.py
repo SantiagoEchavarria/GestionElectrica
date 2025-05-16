@@ -76,7 +76,8 @@ class Consumo(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.get_dispositivo_display()} - {self.energia_consumida} kWh"
+        return f"Consumo del {self.fecha_inicio} al {self.fecha_fin}"
+
 
 class RegistroConsumo(models.Model):
     consumo = models.ForeignKey(Consumo, on_delete=models.CASCADE, related_name="registros")
