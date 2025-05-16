@@ -28,10 +28,10 @@ python manage.py runserver
 
 1. **Ejecutar en la terminal**
    ```bash
-  locust -f C:\Users\admin\Desktop\GestionElectrica\simulador_energias\tests\locustfile.py --host=http://localhost:8000
+      locust -f C:\Users\admin\Desktop\GestionElectrica\simulador_energias\tests\locustfile.py --host=http://localhost:8000
    ```
 2. **Ingresa a http://localhost:8089 en el navegador**
- ```bash
- http://localhost:8089
-```
-#Los resultados del test tambien estan agregados en GESTIONELECTRICA/TestsPunto4/
+   ```bash
+   http://localhost:8089
+   ```
+### Los resultados del test tambien estan agregados en GESTIONELECTRICA/TestsPunto4/
