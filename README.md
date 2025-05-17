@@ -34,4 +34,5 @@ python manage.py runserver
    ```bash
    http://localhost:8089
    ```
-# Los resultados del test tambien estan agregados en GESTIONELECTRICA/TestsPunto4/
+### Los resultados del test tambien estan agregados en GESTIONELECTRICA/TestsPunto4/
+### Hay varios test en cada microServicio, no contemplan numero de usuarios solo procesos.
