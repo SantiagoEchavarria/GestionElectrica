@@ -8,7 +8,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from datetime import datetime
-from .models import Consumo  # ajusta si tu modelo tiene otro nombre
+from .models import Consumo  
 from .utils import verificar_registros_superan_umbral_en_rango
 
 @login_required

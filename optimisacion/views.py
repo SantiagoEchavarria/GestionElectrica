@@ -3,6 +3,9 @@ from django.http import JsonResponse
 from dispositivos.models import Dispositivo
 from django.contrib.auth.decorators import login_required
 
+
+
+
 @login_required
 def consumo_actual(request):
     dispositivos_activos = Dispositivo.objects.filter(estado='encendido')

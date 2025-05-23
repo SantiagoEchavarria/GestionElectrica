@@ -3,7 +3,7 @@
     <h2>Lista de Partes del Hogar</h2>
     <ul>
         {% for parte in partes %}
-            <li>{{ parte.hogar.nombre }} - {{ parte.hogar.nombre }}</li>
+            <li>{{ parte.hogar.nombre }} - {{ parte.nombre }}</li>
         {% endfor %}
     </ul>
     <a href="{% url 'registrar_partes_hogar' %}">Registrar nueva parte</a>

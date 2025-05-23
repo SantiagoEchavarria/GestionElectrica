@@ -8,16 +8,34 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 #Hogares
-@login_required                        
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .models import Hogar
+from .forms import HogarForm
+
+@login_required
 def registrar_hogar(request):
-    if request.method=="POST":
-        form= HogarForm(request.POST)
-        if(form.is_valid):
-            form.save()
+    if request.method == "POST":
+        form = HogarForm(request.POST)
+        if form.is_valid():
+            # Guardamos el hogar primero sin commit para modificarlo si es necesario
+            hogar = form.save(commit=False)
+            
+            # Si tu modelo Hogar tiene campo creador (opcional pero recomendado)
+            if hasattr(hogar, 'creador'):
+                hogar.creador = request.user
+            
+            hogar.save()  # Guardamos definitivamente el hogar
+            
+            # Asignamos el hogar al usuario que inició sesión
+            request.user.hogar = hogar
+            request.user.save()
+            
             return redirect("lista_hogares")
     else:
-        form = HogarForm
-        return render(request, "registrar_hogar.html", {"form": form})
+        form = HogarForm()
+    
+    return render(request, "registrar_hogar.html", {"form": form})
     
 @login_required
 def lista_hogares(request):

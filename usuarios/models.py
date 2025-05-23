@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 import hashlib
-
+from dispositivos.models import Hogar
 
 class UsuarioManager(BaseUserManager):
     def create_user(self, email, nombre, password=None, **extra_fields):
@@ -28,12 +28,18 @@ class UsuarioManager(BaseUserManager):
 
 
 class Usuario(AbstractUser):
-    username = None  # Se elimina username
+    username = None  
     nombre = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     telefono = models.CharField(max_length=15, blank=True, null=True)
     fecha_nacimiento = models.DateField(blank=True, null=True)
-
+    hogar = models.ForeignKey(
+        Hogar, 
+        on_delete=models.SET_NULL,  
+        null=True,
+        blank=True,
+        related_name='usuarios'
+    )
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["nombre"]
 

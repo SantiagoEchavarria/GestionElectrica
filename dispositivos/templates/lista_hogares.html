@@ -6,8 +6,9 @@
 <h2>Lista de Hogares</h2>
 <ul class="list-group">
   {% for hogar in hogares %}
-    <li class="list-group-item">{{ hogar.nombre }} - {{ hogar.direccion }}</li>
+    <li class="list-group-item">{{ hogar.nombre }} - {{ hogar.direccion }}    
   {% endfor %}
 </ul>
 <a href="{% url 'registrar_hogar' %}" class="btn btn-success mt-3">Registrar nuevo hogar</a>
+<a class="btn btn-danger mt-3" href="{% url 'listar_partes_hogar' %}">Partes de hogar</a></li>
 {% endblock %}

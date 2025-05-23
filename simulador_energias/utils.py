@@ -34,5 +34,5 @@ def umbral_operativo(consumo_obj):
     consumo_total = sum(r.consumo_electrico for r in registros)
     dias = (consumo_obj.fecha_fin - consumo_obj.fecha_inicio).days + 1
     promedio_diario = consumo_total / dias
-    umbral = promedio_diario * 1.2  # por ejemplo, 20% por encima del promedio
+    umbral = promedio_diario * 1.2  
     return round(umbral, 3)
