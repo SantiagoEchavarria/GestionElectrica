@@ -11,12 +11,13 @@ from datetime import datetime
 from .models import Consumo  
 from .utils import verificar_registros_superan_umbral_en_rango
 
+
 @login_required
 def calcular_consumo(request):
     dispositivos = Dispositivo.objects.all()
     matriz_consumo = []
     
-    if request.method=="POST":
+    if request.method == "POST":
         fecha_inicio = request.POST.get("fecha_inicio")
         fecha_fin = request.POST.get("fecha_fin")
         dispositivo_id = request.POST.get("dispositivo")
@@ -37,12 +38,17 @@ def calcular_consumo(request):
                     fecha=fila[1],
                     consumo_electrico=fila[2],
                     hora=fila[3],
-                    duracion=fila[4]
+                    duracion=fila[4],
+                    registro_id=fila[5]  # El ID compartido va al final
                 )
                 matriz_consumo.append(fila)
                 
             print(matriz_consumo)
-    return render(request, "consumo.html", {"dispositivos": dispositivos, "matriz_consumo": matriz_consumo})
+    
+    return render(request, "consumo.html", {
+        "dispositivos": dispositivos, 
+        "matriz_consumo": matriz_consumo
+    })
 
 
 @api_view(['GET'])

@@ -4,6 +4,10 @@ import numpy as np
 from dispositivos.models import Dispositivo
 from datetime import timedelta
 import holidays
+import uuid
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from datetime import datetime
 
 class Consumo(models.Model):
     fecha_inicio = models.DateField()
@@ -32,6 +36,9 @@ class Consumo(models.Model):
         except Dispositivo.DoesNotExist:
             return np.array([])
         
+        # Generar un único ID para todos los registros de esta llamada
+        consumo_id  = uuid.uuid4()
+        
         if dispositivo_obj.tipo.nombre in consumo_diario:
             datos_dispositivo = consumo_diario[dispositivo_obj.tipo.nombre]
             lambda_eventos = datos_dispositivo['lambda_eventos']
@@ -43,9 +50,16 @@ class Consumo(models.Model):
             festivos = holidays.Colombia(years=range(self.fecha_inicio.year, self.fecha_fin.year + 1))
 
             for _ in range(dias):
-                if dispositivo_obj.tipo.nombre == 'nevera':
+                if dispositivo_obj.tipo.nombre.lower() == 'nevera':
                     consumo_por_hora = (media_tiempo / 60) * (float(dispositivo_obj.consumo_watts) / 1000)
-                    matriz_consumo.append([dispositivo_obj.nombre, str(fecha_actual), f"{consumo_por_hora:.3f}", 24, media_tiempo])
+                    matriz_consumo.append([
+                        dispositivo_obj.nombre, 
+                        str(fecha_actual), 
+                        f"{consumo_por_hora:.3f}", 
+                        24, 
+                        media_tiempo,
+                        str(consumo_id )
+                    ])
                 else:
                     num_eventos = np.random.poisson(lambda_eventos)
                     if fecha_actual.weekday() >= 5 or fecha_actual in festivos:
@@ -56,18 +70,25 @@ class Consumo(models.Model):
                         tiempo_evento = max(1, tiempo_evento)
                         hora_evento = random.randint(rango_horas[0], rango_horas[1])
                         
-                        if dispositivo_obj.tipo.nombre == 'lampara_led':
+                        if dispositivo_obj.tipo.nombre.lower() == 'lampara_led':
                             if hora_evento < 20:
                                 tiempo_evento = max(1, tiempo_evento // 2)
                             elif hora_evento >= 22:
                                 tiempo_evento = min(media_tiempo, tiempo_evento * 1.5)
 
                         consumo_electrico = (tiempo_evento / 60) * (float(dispositivo_obj.consumo_watts) / 1000)
-                        matriz_consumo.append([dispositivo_obj.nombre, str(fecha_actual), f"{consumo_electrico:.3f}", hora_evento, tiempo_evento])
+                        matriz_consumo.append([
+                            dispositivo_obj.nombre, 
+                            str(fecha_actual), 
+                            f"{consumo_electrico:.3f}", 
+                            hora_evento, 
+                            tiempo_evento,
+                            str(consumo_id )
+                        ])
                 
                 fecha_actual += timedelta(days=1)
                 
-            matriz_consumo.sort(key=lambda x: (x[1], x[3]))
+            matriz_consumo.sort(key=lambda x: (x[1], x[3]))  # Ordenar por fecha y hora
             return np.array(matriz_consumo, dtype=object)
         
         return np.array([])
@@ -80,15 +101,20 @@ class Consumo(models.Model):
 
 
 class RegistroConsumo(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     consumo = models.ForeignKey(Consumo, on_delete=models.CASCADE, related_name="registros")
     dispositivo = models.CharField(max_length=50)
     fecha = models.DateField()
     consumo_electrico = models.FloatField()
     hora = models.IntegerField()
     duracion = models.IntegerField()
+    registro_id = models.UUIDField(default=uuid.uuid4, editable=False)
     
     def save(self, *args, **kwargs):
+        if not self.id:
+            self.id = uuid.uuid4()
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.dispositivo} - {self.fecha}"
+        return f"{self.dispositivo} - {self.fecha} - {self.registro_id}"
+

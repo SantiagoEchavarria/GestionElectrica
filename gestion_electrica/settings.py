@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'usuarios',
     'dispositivos',
+    'optimisacion',
     'simulador_energias'
 ]
 

@@ -5,6 +5,7 @@ from usuarios import views
 from django.contrib.auth import views as auth_views
 from dispositivos import views as views_dispositivos
 from simulador_energias import views as views_simulador
+from optimisacion import views as views_optimisacion
 from django.urls import include
 
 urlpatterns = [
@@ -33,10 +34,11 @@ urlpatterns = [
     path("partes-hogar/registrar/", views_dispositivos.registrar_partes_hogar, name="registrar_partes_hogar"),
     path("dispositivos/<int:dispositivo_id>/cambiar_estado/", views_dispositivos.cambiar_estado_dispositivo, name="cambiar_estado_dispositivo"),
 
-    #intento optimizaccion sjsjsjssj
+    #optimizaccion 
     path("optimizacion/", include("optimisacion.urls")),
     path('api/consumo/<int:id>/verificar', views_simulador.verificar_umbral, name='verificar_umbral'),
-
+    path('consumo/<uuid:registro_id>/', views_optimisacion.grafico_consumo_por_registro, name='grafico_consumo'),
+    
     #urls simulador
     path("calcular_consumo/", views_simulador.calcular_consumo, name="calcular_consumo"),
     
