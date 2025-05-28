@@ -40,6 +40,8 @@ urlpatterns = [
     path('consumo/<uuid:registro_id>/', views_optimisacion.grafico_consumo_por_registro, name='grafico_consumo'),
     
     #urls simulador
-    path("calcular_consumo/", views_simulador.calcular_consumo, name="calcular_consumo"),
-    
+    path("consumo/calcular_consumo/", views_simulador.calcular_consumo, name="calcular_consumo"),
+    path("consumo/listar_consumos/", views_simulador.listar_consumos, name="listar_consumos"),
+    path('consumo/eliminar/<uuid:consumo_id>/', views_simulador.eliminar_consumo, name='eliminar_consumo'),
+
 ]

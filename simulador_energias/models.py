@@ -5,11 +5,11 @@ from dispositivos.models import Dispositivo
 from datetime import timedelta
 import holidays
 import uuid
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from datetime import datetime
+from usuarios.models import Usuario
 
 class Consumo(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='consumos', null=True, blank=True)
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
 

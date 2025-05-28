@@ -53,13 +53,16 @@
                     
                     {% if request.user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link text-white fw-semibold" href="/dispositivos">Dispositivos</a>
+                            <a class="nav-link text-white fw-semibold" href="{% url 'lista_dispositivos' %}">Dispositivos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white fw-semibold" href="/calcular_consumo">Simular</a>
+                            <a class="nav-link text-white fw-semibold" href="{% url 'calcular_consumo' %}">Simular</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white fw-semibold" href="/hogares">Hogares</a>
+                            <a class="nav-link text-white fw-semibold" href="{% url 'listar_consumos' %}">Registros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white fw-semibold" href="{% url 'lista_hogares' %}">Hogares</a>
                         </li>
 
                         <li class="nav-item dropdown">

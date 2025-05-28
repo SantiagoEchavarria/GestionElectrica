@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+    .card-hover {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-hover:hover {
+        transform: scale(1.03);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Lista de Primeros Registros Eléctricos</h2>
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for consumo in consumos %}
+    <div class="col">
+        <div class="card card-hover h-100">
+            <div class="card-body">
+                <h5 class="card-title fw-bold">
+                    Consumo del {{ consumo.fecha_inicio }} al {{ consumo.fecha_fin }}
+                </h5>
+                <p class="card-text">
+                    <ul class="list-unstyled">
+                        {% with primer_registro=consumo.registros.first %}
+                            {% if primer_registro %}
+                                <li class="mb-2">
+                                    <i class="bi bi-plug-fill text-primary me-2"></i>
+                                    <strong>Dispositivo:</strong> {{ primer_registro.dispositivo }}<br>
+                                    <i class="bi bi-calendar-event-fill text-info me-2"></i>
+                                    <strong>Fecha:</strong> {{ primer_registro.fecha }}<br>
+                                    <i class="bi bi-lightning-charge-fill text-warning me-2"></i>
+                                    <strong>Consumo:</strong> {{ primer_registro.consumo_electrico }} kWh<br>
+                                    <i class="bi bi-clock-fill text-secondary me-2"></i>
+                                    <strong>Hora:</strong> {{ primer_registro.hora }}<br>
+                                    <i class="bi bi-hourglass-split text-success me-2"></i>
+                                    <strong>Duración:</strong> {{ primer_registro.duracion }} minutos
+                                </li>
+                            {% else %}
+                                <li>No hay registros para este consumo</li>
+                            {% endif %}
+                        {% endwith %}
+                    </ul>
+                </p>
+                <div class="d-flex justify-content-end mt-3">
+                    {% with primer_registro=consumo.registros.first %}
+                        {% if primer_registro %}
+                            <a href="{% url 'grafico_consumo' registro_id=primer_registro.registro_id %}" class="btn btn-outline-primary me-2">
+                                <i class="bi bi-graph-up"></i> Mostrar Gráfica
+                            </a>
+                        {% endif %}
+                    {% endwith %}
+                    <form method="post" action="{% url 'eliminar_consumo' consumo_id=consumo.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este consumo?')">
+                            <i class="bi bi-trash-fill"></i> Eliminar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
