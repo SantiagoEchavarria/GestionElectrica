@@ -1,12 +1,111 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <h2>Gráfico de consumo para {{ dispositivo }} </h2>
-<div class="consumo-info">
-    <p>Total consumo: {{ total_consumo }} kWh</p>
-    <p>Número de registros: {{ registros_count }}</p>
+
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <p>Total consumo: {{ total_consumo }} kWh</p>
+            <p>Número de registros: {{ registros_count }}</p>
+            <p>Número maximo esperado: {{ maximo }}</p>
+            <p>Número minimo esperado: {{ minimo }}</p>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <div class="card mb-4">
+            <canvas id="consumoChart" width="400" height="200"></canvas>
+        </div>
+    </div>
 </div>
-<div class="grafico">
-    <img src="data:image/png;base64,{{ graphic }}" alt="Gráfico de consumo eléctrico">
-</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const fechasHoras = JSON.parse('{{ fechas_horas|escapejs }}');
+    const consumos = JSON.parse('{{ consumos|escapejs }}');
+    const dispositivo = '{{ dispositivo|escapejs }}';
+    const registroId = '{{ registro_id|escapejs }}';
+    const maximo = {{ maximo|escapejs }}; // Asegúrate de que 'maximo' contenga el valor numérico
+    const minimo = {{ minimo|escapejs }}; // Asegúrate de que 'minimo' contenga el valor numérico
+
+    const ctx = document.getElementById('consumoChart').getContext('2d');
+    const consumoChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: fechasHoras,
+            datasets: [{
+                label: `Consumo eléctrico ${dispositivo}`,
+                data: consumos,
+                fill: false,
+                borderColor: 'rgb(192, 75, 75)',
+                tension: 0.1
+            },
+            {
+                label: `Máximo (${maximo} kWh)`,
+                data: Array(fechasHoras.length).fill(maximo), // Crea un array lleno del valor máximo
+                fill: false,
+                borderColor: 'rgb(54, 162, 235)',
+                borderDash: [5, 5], // Línea punteada para diferenciar
+                pointRadius: 0, // Oculta los puntos
+                tension: 0
+            },
+            {
+                label: `Mínimo (${minimo} kWh)`,
+                data: Array(fechasHoras.length).fill(minimo), // Crea un array lleno del valor mínimo
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                borderDash: [5, 5], // Línea punteada para diferenciar
+                pointRadius: 0, // Oculta los puntos
+                tension: 0
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Consumo eléctrico (kWh)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Fecha y Hora'
+                    },
+                    ticks: {
+                        autoSkip: true,
+                        maxTicksLimit: 10 // Adjust as needed
+                    },
+                    adapters: {
+                        date: {
+                            format: 'YYYY-MM-DD HH:mm'
+                        }
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            return tooltipItems[0].label;
+                        },
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += new Intl.NumberFormat('en-US', { style: 'decimal' }).format(context.parsed.y);
+                            }
+                            return label + ' kWh';
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
 {% endblock %}

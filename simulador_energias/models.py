@@ -78,7 +78,7 @@ class Consumo(models.Model):
 
                         consumo_electrico = (tiempo_evento / 60) * (float(dispositivo_obj.consumo_watts) / 1000)
                         matriz_consumo.append([
-                            dispositivo_obj.nombre, 
+                            dispositivo_obj.tipo.nombre, 
                             str(fecha_actual), 
                             f"{consumo_electrico:.3f}", 
                             hora_evento, 
