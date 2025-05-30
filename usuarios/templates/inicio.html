@@ -34,7 +34,7 @@
 </div>
 
 <div class="text-center mt-4">
-    <a href="/dispositivos" class="btn btn-primary btn-lg me-2">Ver Dispositivos</a>
-    <a href="/calcular_consumo" class="btn btn-success btn-lg">Simular Consumo</a>
+    <a href="{% url 'lista_dispositivos'%}" class="btn btn-primary btn-lg me-2">Ver Dispositivos</a>
+    <a href="{% url 'calcular_consumo' %}" class="btn btn-success btn-lg"> Simular Consumo</a>
 </div>
 {% endblock %}

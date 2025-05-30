@@ -25,8 +25,8 @@ def grafico_consumo_por_registro(request, registro_id):
 
     try:
         tipo_dispositivo = TipoDispositivo.objects.get(nombre=dispositivo)
-        maximo = tipo_dispositivo.rango_consumo_max
-        minimo = tipo_dispositivo.rango_consumo_min
+        maximo = tipo_dispositivo.rango_consumo_max/1000
+        minimo = tipo_dispositivo.rango_consumo_min/1000
         print("maximo " + str(maximo))
         print("minimo " + str(minimo))
     except TipoDispositivo.DoesNotExist:
