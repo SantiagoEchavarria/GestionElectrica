@@ -19,6 +19,32 @@
             <canvas id="consumoChart" width="400" height="200"></canvas>
         </div>
     </div>
+
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <img src="{{ request.user.get_gravatar_url }}" class="user-avatar my-2" text="Avatar de usuario" width="80" height="80">
+            <p class="fw-bold">{{ usuario.nombre }}</p>            
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <h5 class="card-header">Distribución por dispositivo</h5>
+            <div class="card-body">
+                <canvas id="pieChart" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mb-4">
+        {% if heatmap_image %}
+            <h3>Matriz de Calor de Consumo</h3>
+            <img src="data:image/png;base64,{{ heatmap_image }}" alt="Matriz de Calor">
+        {% endif %}
+        </div>
+    </div>
+    
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -101,6 +127,43 @@
                                 label += new Intl.NumberFormat('en-US', { style: 'decimal' }).format(context.parsed.y);
                             }
                             return label + ' kWh';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+
+     const pieLabels = JSON.parse('{{ pie_chart_labels|escapejs }}');
+    const pieData = JSON.parse('{{ pie_chart_data|escapejs }}');
+
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    const pieChart = new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: pieLabels,
+            datasets: [{
+                label: 'Distribución de dispositivos',
+                data: pieData,
+                backgroundColor: [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#8e5ea2', '#3cba9f', '#e8c3b9', '#c45850'
+                ],
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.parsed || 0;
+                            return `${label}: ${value} registros`;
                         }
                     }
                 }
