@@ -15,6 +15,51 @@ import pandas as pd
 import seaborn as sns
 from io import BytesIO
 
+
+def generar_grafico_lineas_multiples():
+    registros = RegistroConsumo.objects.all()
+
+    if not registros.exists():
+        return {'lineas_multiples_image': None}
+
+    data = {
+       'fecha_hora': [
+            f"{registro.fecha} {registro.hora:02}:00:00"
+            for registro in registros
+        ],
+
+        'consumo': [registro.consumo_electrico for registro in registros],
+        'dispositivo': [registro.dispositivo for registro in registros],
+    }
+
+    df = pd.DataFrame(data)
+    df['fecha_hora'] = pd.to_datetime(df['fecha_hora'])  # ya está en formato correcto
+
+    plt.figure(figsize=(14, 6))
+
+    for dispositivo in df['dispositivo'].unique():
+        subset = df[df['dispositivo'] == dispositivo]
+        plt.plot(subset['fecha_hora'], subset['consumo'], label=dispositivo)
+
+    plt.xlabel('Fecha y Hora')
+    plt.ylabel('Consumo Eléctrico (kWh)')
+    plt.title('Consumo Eléctrico por Dispositivo')
+    plt.legend()
+    plt.tight_layout()
+
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    buffer.close()
+
+    lineas_multiples_base64 = base64.b64encode(image_png).decode('utf-8')
+
+    return {'lineas_multiples_image': lineas_multiples_base64}
+
+
+
+
 def generar_matriz_calor(registro_id):
     registros = RegistroConsumo.objects.filter(registro_id=registro_id)
 
@@ -52,7 +97,7 @@ def generar_matriz_calor(registro_id):
 def grafico_consumo_por_registro(request, registro_id):
     """
     Genera un gráfico de consumo eléctrico para un registro_id específico,
-    un gráfico circular y una matriz de calor.
+    un gráfico circular, una matriz de calor y un gráfico de líneas múltiples.
     """
     usuario = request.user
     registros = RegistroConsumo.objects.filter(registro_id=registro_id).order_by('fecha', 'hora')
@@ -60,7 +105,7 @@ def grafico_consumo_por_registro(request, registro_id):
     if not registros.exists():
         return render(request, 'error.html', {'message': 'No se encontraron registros con ese ID'})
 
-    fechas_horas = [f"{registro.fecha} {registro.hora}" for registro in registros]
+    fechas_horas = [f"{registro.fecha} {registro.hora:02}:00:00" for registro in registros]
     consumos = [registro.consumo_electrico for registro in registros]
     dispositivo = registros[0].dispositivo
 
@@ -78,9 +123,13 @@ def grafico_consumo_por_registro(request, registro_id):
     pie_chart_labels = list(device_counts.keys())
     pie_chart_data = list(device_counts.values())
 
-    # Lógica de la matriz de calor
+    # Matriz de calor
     heatmap_context = generar_matriz_calor(registro_id)
     heatmap_image = heatmap_context.get('heatmap_image')
+
+    # Gráfico de líneas múltiples
+    lineas_context = generar_grafico_lineas_multiples()
+    lineas_multiples_image = lineas_context.get('lineas_multiples_image')
 
     context = {
         'usuario': usuario,
@@ -94,10 +143,12 @@ def grafico_consumo_por_registro(request, registro_id):
         'minimo': minimo,
         'pie_chart_labels': json.dumps(pie_chart_labels),
         'pie_chart_data': json.dumps(pie_chart_data),
-        'heatmap_image': heatmap_image,  # Base64 para insertar en la plantilla
+        'heatmap_image': heatmap_image,
+        'lineas_multiples_image': lineas_multiples_image,
     }
 
     return render(request, 'grafico_consumo.html', context)
+
 
 
 

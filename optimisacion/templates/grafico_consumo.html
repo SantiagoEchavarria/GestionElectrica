@@ -2,51 +2,72 @@
 {% load static %}
 
 {% block content %}
-<h2>Gráfico de consumo para {{ dispositivo }} </h2>
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Consumo energético para <span class="text-primary">{{ dispositivo }}</span></h2>
 
-<div class="row mt-4">
-    <div class="col-md-3">
-        <div class="card mb-4">
-            <p>Total consumo: {{ total_consumo }} kWh</p>
-            <p>Número de registros: {{ registros_count }}</p>
-            <p>Número maximo esperado: {{ maximo }}</p>
-            <p>Número minimo esperado: {{ minimo }}</p>
-        </div>
-    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Datos generales -->
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <img src="{{ request.user.get_gravatar_url }}" class="rounded-circle mb-2 border shadow" alt="Avatar de usuario" width="80" height="80">
+                    <p class="fw-bold mb-0">{{ usuario.nombre }}</p>
+                    <small class="text-muted">Usuario</small>
+                </div>
+            </div>
 
-    <div class="col-md-9">
-        <div class="card mb-4">
-            <canvas id="consumoChart" width="400" height="200"></canvas>
-        </div>
-    </div>
+            <div class="card shadow-sm mt-5">
+                <div class="card-header fw-bold">Resumen</div>
+                <div class="card-body">
+                    <p>Total consumo: <span class="fw-semibold">{{ total_consumo }} kWh</span></p>
+                    <p>Número de registros: <span class="fw-semibold">{{ registros_count }}</span></p>
+                    <p>Máximo esperado: <span class="fw-semibold">{{ maximo }}</span></p>
+                    <p>Mínimo esperado: <span class="fw-semibold">{{ minimo }}</span></p>
+                </div>
+            </div>
 
-    <div class="col-md-3">
-        <div class="card mb-4">
-            <img src="{{ request.user.get_gravatar_url }}" class="user-avatar my-2" text="Avatar de usuario" width="80" height="80">
-            <p class="fw-bold">{{ usuario.nombre }}</p>            
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card mb-4">
-            <h5 class="card-header">Distribución por dispositivo</h5>
-            <div class="card-body">
-                <canvas id="pieChart" width="400" height="400"></canvas>
+            <!-- Distribución por dispositivo -->
+            <div class="card shadow-sm mt-5">
+                <div class="card-header fw-bold">Distribución por Dispositivo</div>
+                <div class="card-body">
+                    <canvas id="pieChart" height="300"></canvas>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-6">
-        <div class="card mb-4">
-        {% if heatmap_image %}
-            <h3>Matriz de Calor de Consumo</h3>
-            <img src="data:image/png;base64,{{ heatmap_image }}" alt="Matriz de Calor">
-        {% endif %}
+            <!-- Gráfico de consumo -->
+        <div class="col-md-9">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header fw-bold">Gráfico de Consumo Eléctrico</div>
+                <div class="card-body">
+                    <canvas id="consumoChart" height="200"></canvas>
+                </div>
+            </div>
+       
+
+            <!-- Matriz de Calor -->
+            {% if heatmap_image %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header fw-bold">Matriz de Calor de Consumo</div>
+                <div class="card-body text-center">
+                    <img src="data:image/png;base64,{{ heatmap_image }}" alt="Matriz de Calor" class="img-fluid rounded">
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Gráfico de Líneas Múltiples -->
+            {% if lineas_multiples_image %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header fw-bold">Gráfico de Líneas Múltiples</div>
+                <div class="card-body text-center">
+                    <img src="data:image/png;base64,{{ lineas_multiples_image }}" alt="Gráfico de Líneas Múltiples" class="img-fluid rounded">
+                </div>
+            </div>
+            {% endif %}
         </div>
+       
     </div>
-    
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const fechasHoras = JSON.parse('{{ fechas_horas|escapejs }}');
