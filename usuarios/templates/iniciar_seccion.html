@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <div class="container d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 80px); margin-top: 20px;">
     <div class="card shadow-lg w-100" style="max-width: 480px;">
@@ -34,21 +35,5 @@
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const usernameInput = document.getElementById("username");
-        const errorDisplay = document.getElementById("usernameError");
-
-        usernameInput.addEventListener("blur", function () {
-            const value = usernameInput.value;
-            if (value && !value.includes("@")) {
-                errorDisplay.textContent = "El nombre de usuario debe contener un '@'";
-            } else {
-                errorDisplay.textContent = "";
-            }
-        });
-    });
-</script>
-
+<script src="{% static 'usuarios/js/validarIniciar.js' %}"></script>
 {% endblock %}

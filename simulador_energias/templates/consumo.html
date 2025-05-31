@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
+
 <div class="container mt-4">
     <h2 class="text-center">Calcular Consumo de Dispositivos</h2>
     
@@ -62,4 +64,7 @@
     </div>
     {% endif %}
 </div>
+<script src="{% static 'js/validar_fechas.js' %}"></script>
+
+
 {% endblock %}
