@@ -15,27 +15,61 @@
                     <small class="text-muted">Usuario</small>
                 </div>
             </div>
-
-            <div class="card shadow-sm mt-5">
-                <div class="card-header fw-bold">Resumen</div>
-                <div class="card-body">
-                    <p>Total consumo: <span class="fw-semibold">{{ total_consumo }} kWh</span></p>
-                    <p>Número de registros: <span class="fw-semibold">{{ registros_count }}</span></p>
-                    <p>Máximo esperado: <span class="fw-semibold">{{ maximo }}</span></p>
-                    <p>Mínimo esperado: <span class="fw-semibold">{{ minimo }}</span></p>
-                </div>
-            </div>
-
-            <!-- Distribución por dispositivo -->
+            
+             <!-- Distribución por dispositivo -->
             <div class="card shadow-sm mt-5">
                 <div class="card-header fw-bold">Distribución por Dispositivo</div>
                 <div class="card-body">
                     <canvas id="pieChart" height="300"></canvas>
                 </div>
             </div>
+
+            <!-- Resumen -->
+            <div class="card shadow-sm mt-5 border-primary">
+                <div class="card-header fw-bold bg-primary text-white d-flex align-items-center">
+                    <i class="bi bi-bar-chart-fill me-2"></i> Resumen
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>Total consumo:</strong> {{ total_consumo }} kWh
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Número de registros:</strong> {{ registros_count }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Máximo esperado:</strong> {{ maximo }} kWh
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Mínimo esperado:</strong> {{ minimo }} kWh
+                    </li>
+                </ul>
+            </div>
+
+
+         <!-- Card de Registros que superan el consumo máximo -->
+        <div class="card shadow-sm mt-5 border-danger">
+            <div class="card-header fw-bold bg-danger text-white d-flex align-items-center">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> 
+                Registros que superan el consumo máximo
+            </div>
+            <ul class="list-group list-group-flush">
+                {% if registros_superan_maximo %}
+                    {% for reg in registros_superan_maximo %}
+                        <li class="list-group-item">
+                            ⚠️ El {{ reg.fecha_hora }} se registró un consumo de 
+                            <strong>{{ reg.consumo }} kWh</strong> (supera el máximo)
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="list-group-item text-success">
+                        ✅ Ningún registro supera el consumo máximo permitido.
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
         </div>
 
-            <!-- Gráfico de consumo -->
+        <!-- Gráficos de consumo -->
         <div class="col-md-9">
             <div class="card shadow-sm mb-4">
                 <div class="card-header fw-bold">Gráfico de Consumo Eléctrico</div>
@@ -43,7 +77,6 @@
                     <canvas id="consumoChart" height="200"></canvas>
                 </div>
             </div>
-       
 
             <!-- Matriz de Calor -->
             {% if heatmap_image %}
@@ -56,17 +89,16 @@
             {% endif %}
 
             <!-- Gráfico de Líneas Múltiples -->
-            {% if lineas_multiples_image %}
             <div class="card shadow-sm mb-4">
                 <div class="card-header fw-bold">Gráfico de Líneas Múltiples</div>
-                <div class="card-body text-center">
-                    <img src="data:image/png;base64,{{ lineas_multiples_image }}" alt="Gráfico de Líneas Múltiples" class="img-fluid rounded">
+                <div class="card-body">
+                    <canvas id="multiLineChart" height="300"></canvas>
                 </div>
             </div>
-            {% endif %}
+
         </div>
-       
     </div>
+    
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -155,8 +187,8 @@
         }
     });
 
-
-     const pieLabels = JSON.parse('{{ pie_chart_labels|escapejs }}');
+    //Gráfico circular de distribución por dispositivo
+    const pieLabels = JSON.parse('{{ pie_chart_labels|escapejs }}');
     const pieData = JSON.parse('{{ pie_chart_data|escapejs }}');
 
     const pieCtx = document.getElementById('pieChart').getContext('2d');
@@ -191,5 +223,70 @@
             }
         }
     });
+
+    // Gráfico de líneas múltiples
+    const multiLabels = JSON.parse('{{ lineas_multiples_labels|escapejs }}');
+    const multiSeries = JSON.parse('{{ lineas_multiples_series|escapejs }}');
+
+    const multiDatasets = Object.keys(multiSeries).map((dispositivo, index) => {
+        const colors = [
+            'rgb(255, 99, 132)', 'rgb(54, 162, 235)',
+            'rgb(255, 206, 86)', 'rgb(75, 192, 192)',
+            'rgb(153, 102, 255)', 'rgb(255, 159, 64)'
+        ];
+        return {
+            label: dispositivo,
+            data: multiSeries[dispositivo],
+            borderColor: colors[index % colors.length],
+            fill: false,
+            tension: 0.1
+        };
+    });
+
+    const multiCtx = document.getElementById('multiLineChart').getContext('2d');
+    const multiLineChart = new Chart(multiCtx, {
+        type: 'line',
+        data: {
+            labels: multiLabels,
+            datasets: multiDatasets
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Consumo por Dispositivo'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Consumo (kWh)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Fecha y Hora'
+                    }
+                }
+            }
+        }
+    });
+
 </script>
 {% endblock %}

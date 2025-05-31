@@ -14,7 +14,43 @@ from collections import Counter
 import pandas as pd
 import seaborn as sns
 from io import BytesIO
+from django.core.serializers.json import DjangoJSONEncoder
 
+
+def obtener_datos_lineas_multiples2():
+    registros = RegistroConsumo.objects.all().order_by('fecha', 'hora')
+
+    if not registros.exists():
+        return {
+            'lineas_multiples_labels': json.dumps([], cls=DjangoJSONEncoder),
+            'lineas_multiples_series': json.dumps({}, cls=DjangoJSONEncoder)
+        }
+
+    data = {}
+    labels = []
+
+    for registro in registros:
+        fecha_hora = f"{registro.fecha} {registro.hora:02}:00"
+        if fecha_hora not in labels:
+            labels.append(fecha_hora)
+        dispositivo = str(registro.dispositivo)
+        data.setdefault(dispositivo, {})[fecha_hora] = registro.consumo_electrico
+
+    # Asegurar que todos los dispositivos tengan valores para todas las fechas
+    for dispositivo in data:
+        for label in labels:
+            data[dispositivo].setdefault(label, 0)
+
+    # Formatear datos para Chart.js
+    datasets = {
+        dispositivo: [data[dispositivo][label] for label in labels]
+        for dispositivo in data
+    }
+
+    return {
+        'lineas_multiples_labels': json.dumps(labels, cls=DjangoJSONEncoder),
+        'lineas_multiples_series': json.dumps(datasets, cls=DjangoJSONEncoder),
+    }
 
 def generar_grafico_lineas_multiples():
     registros = RegistroConsumo.objects.all()
@@ -57,9 +93,6 @@ def generar_grafico_lineas_multiples():
 
     return {'lineas_multiples_image': lineas_multiples_base64}
 
-
-
-
 def generar_matriz_calor(registro_id):
     registros = RegistroConsumo.objects.filter(registro_id=registro_id)
 
@@ -95,10 +128,6 @@ def generar_matriz_calor(registro_id):
     
 @login_required
 def grafico_consumo_por_registro(request, registro_id):
-    """
-    Genera un gráfico de consumo eléctrico para un registro_id específico,
-    un gráfico circular, una matriz de calor y un gráfico de líneas múltiples.
-    """
     usuario = request.user
     registros = RegistroConsumo.objects.filter(registro_id=registro_id).order_by('fecha', 'hora')
 
@@ -118,6 +147,17 @@ def grafico_consumo_por_registro(request, registro_id):
         minimo = None
         print(f"Advertencia: No se encontró TipoDispositivo para '{dispositivo}'.")
 
+    # Identificar consumos que superan el máximo
+    registros_superan_maximo = []
+    if maximo is not None:
+        for registro in registros:
+            consumo_kw = registro.consumo_electrico
+            if consumo_kw > maximo:
+                registros_superan_maximo.append({
+                    'fecha_hora': f"{registro.fecha} {registro.hora:02}:00:00",
+                    'consumo': consumo_kw
+                })
+
     all_registros = RegistroConsumo.objects.all()
     device_counts = Counter(reg.dispositivo for reg in all_registros)
     pie_chart_labels = list(device_counts.keys())
@@ -126,10 +166,6 @@ def grafico_consumo_por_registro(request, registro_id):
     # Matriz de calor
     heatmap_context = generar_matriz_calor(registro_id)
     heatmap_image = heatmap_context.get('heatmap_image')
-
-    # Gráfico de líneas múltiples
-    lineas_context = generar_grafico_lineas_multiples()
-    lineas_multiples_image = lineas_context.get('lineas_multiples_image')
 
     context = {
         'usuario': usuario,
@@ -144,8 +180,9 @@ def grafico_consumo_por_registro(request, registro_id):
         'pie_chart_labels': json.dumps(pie_chart_labels),
         'pie_chart_data': json.dumps(pie_chart_data),
         'heatmap_image': heatmap_image,
-        'lineas_multiples_image': lineas_multiples_image,
+        'registros_superan_maximo': registros_superan_maximo,
     }
+    context.update(obtener_datos_lineas_multiples2())
 
     return render(request, 'grafico_consumo.html', context)
 
