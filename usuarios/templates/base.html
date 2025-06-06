@@ -11,7 +11,7 @@
     <title>Gestión Eléctrica</title>
 
     <!-- Estilos personalizados -->
-    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}">
     <style>
         .user-avatar {
             width: 32px;
@@ -27,17 +27,47 @@
         }
 
         .nav-link:hover {
-            color: #FFD700 !important; /* Color dorado al pasar el mouse */
+            color: #FFD700 !important;
         }
 
         .navbar-brand {
             font-size: 1.5rem;
         }
+
+        .modo-oscuro {
+            background-color: #121212 !important;
+            color: #f1f1f1 !important;
+        }
+
+        .modo-oscuro a {
+            color: #9cdcfe !important;
+        }
+
+        .modo-oscuro .card,
+        .modo-oscuro .list-group-item,
+        .modo-oscuro .alert,
+        .modo-oscuro .navbar,
+        .modo-oscuro .dropdown-menu {
+            background-color: #1e1e1e !important;
+            color: #f1f1f1 !important;
+            border-color: #333 !important;
+        }
+
+        .modo-oscuro .form-control {
+            background-color: #333 !important;
+            color: white;
+        }
+
+        #modoOscuroBtn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999;
+        }
     </style>
 </head>
 
 <body>
-    <!-- Navbar mejorado -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm py-3">
         <div class="container">
             <a class="navbar-brand fw-bold" href="/">⚡ Gestión Eléctrica</a>
@@ -50,7 +80,6 @@
                     <li class="nav-item">
                         <a class="nav-link text-white fw-semibold" href="/">Inicio</a>
                     </li>
-                    
                     {% if request.user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link text-white fw-semibold" href="{% url 'lista_dispositivos' %}">Dispositivos</a>
@@ -64,7 +93,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-white fw-semibold" href="{% url 'lista_hogares' %}">Hogares</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white fw-semibold" href="{% url 'vista_optimizacion' %}">Optimización</a>
+                        </li>
 
+                        <!-- Menú de usuario -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
                                 <img src="{{ request.user.get_gravatar_url }}" class="user-avatar" alt="User Avatar">
@@ -78,7 +111,6 @@
                                 <li><a class="dropdown-item" href="/cerrar_seccion/">Cerrar sesión</a></li>
                             </ul>
                         </li>
-
                     {% else %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
@@ -95,12 +127,16 @@
         </div>
     </nav>
 
-    <!-- Contenido principal -->
     <div class="container mt-4">
         {% block content %}
         {% endblock %}
     </div>
 
+    <!-- Botón modo oscuro -->
+    <button id="modoOscuroBtn" class="btn btn-dark">🌙</button>
+
     <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="{% static 'js/modo_oscuro.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+/* Modo oscuro */
+.modo-oscuro {
+    background-color: #121212 !important;
+    color: #f1f1f1 !important;
+}
+
+.modo-oscuro a {
+    color: #9cdcfe !important;
+}
+
+.modo-oscuro .card,
+.modo-oscuro .list-group-item,
+.modo-oscuro .alert {
+    background-color: #1e1e1e !important;
+    color: #f1f1f1 !important;
+    border-color: #333 !important;
+}
+
+.modo-oscuro .navbar {
+    background-color: #222 !important;
+}

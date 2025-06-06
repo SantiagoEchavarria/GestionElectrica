@@ -32,6 +32,14 @@
         </div>
     </div>
 
+    <!-- ✅ ALERTA DE CONSUMO -->
+    {% if mensaje_alerta %}
+    <div class="alert alert-{{ tipo_alerta }} mt-4 text-center" role="alert">
+        <strong>{{ mensaje_alerta }}</strong>
+    </div>
+    {% endif %}
+
+    <!-- ✅ TABLA DE RESULTADOS -->
     {% if matriz_consumo %}
     <div class="mt-5">
         <h3 class="text-center">Resultados:</h3>
